@@ -13,7 +13,7 @@ RUN pip install poetry
 
 # Copy the project files and install dependencies
 ADD {{ cookiecutter.project_slug }} ./{{ cookiecutter.project_slug }}
-COPY pyproject.toml ./
+COPY pyproject.toml README.md ./
 
 # Use the virtual environment from the base image to install the plugin and dependencies
 RUN . /opt/venv/bin/activate && \
