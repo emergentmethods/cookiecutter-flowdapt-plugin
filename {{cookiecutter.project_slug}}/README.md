@@ -24,6 +24,7 @@ task run
 ## Usage
 
 ```bash
+flowctl apply -p workflows/
 flowctl workflow run example_workflow
 ```
 
