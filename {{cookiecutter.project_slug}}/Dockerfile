@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 ARG FLOWDAPT_VERSION=local
 # First stage: builder environment
-FROM registry.git.freqai.cloud/flowdapt/flowdapt:$FLOWDAPT_VERSION AS builder
+FROM ghcr.io/emergentmethods/flowdapt:$FLOWDAPT_VERSION AS builder
 
 ARG NON_ROOT_USER=flowdapt
 USER root
@@ -15,17 +15,13 @@ RUN pip install poetry
 ADD {{ cookiecutter.project_slug }} ./{{ cookiecutter.project_slug }}
 COPY pyproject.toml ./
 
-# Set the token for private repository
-RUN --mount=type=secret,id=CI_DEP_TOKEN \
-    poetry config http-basic.gitlab dependencies $(cat /run/secrets/CI_DEP_TOKEN)
-
 # Use the virtual environment from the base image to install the plugin and dependencies
 RUN . /opt/venv/bin/activate && \
     poetry config installer.max-workers 4 && \
     poetry install --without dev
 
 # Second stage: production build
-FROM registry.git.freqai.cloud/flowdapt/flowdapt:$FLOWDAPT_VERSION AS production
+FROM ghcr.io/emergentmethods/flowdapt:$FLOWDAPT_VERSION AS production
 
 # Set up the working directory
 WORKDIR /srv/{{ cookiecutter.project_slug }}
