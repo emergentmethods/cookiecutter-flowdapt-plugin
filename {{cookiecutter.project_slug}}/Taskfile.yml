@@ -26,7 +26,7 @@ tasks:
 
   build:
     cmds:
-      - {% raw %}docker build --secret id=CI_DEP_TOKEN {{.DOCKER_BUILD_ARGS}} --build-arg FLOWDAPT_VERSION={{.FLOWDAPT_VERSION}} -t {{.IMAGE_NAME}}:{{.IMAGE_TAG}} .{% endraw %}
+      - {% raw %}docker build {{.DOCKER_BUILD_ARGS}} --build-arg FLOWDAPT_VERSION={{.FLOWDAPT_VERSION}} -t {{.IMAGE_NAME}}:{{.IMAGE_TAG}} .{% endraw %}
 
   build-docs:
     cmds:
