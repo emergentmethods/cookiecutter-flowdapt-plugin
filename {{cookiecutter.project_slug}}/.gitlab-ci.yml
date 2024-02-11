@@ -99,6 +99,8 @@ build-env:
     - pip install -U pip
     - pip install poetry
     - poetry install
+    # Install go-task
+    - sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b .
   rules:
       # If project dependencies were changed then run
     - changes:
@@ -143,7 +145,7 @@ lint-code:
   stage: lint
   script:
       # Ensure the code is formatted correctly
-    - task lint
+    - ./task lint
 
 
 unit-tests:
@@ -151,7 +153,7 @@ unit-tests:
   <<: *no_tag
   stage: test
   script:
-    - task unit-tests
+    - ./task unit-tests
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
     reports:
@@ -213,7 +215,7 @@ build-docs:
   <<: *only_tag
   stage: build
   script:
-    - task build-docs
+    - ./task build-docs
   artifacts:
     paths:
       - site/
@@ -226,7 +228,7 @@ build-wheel:
   stage: build
   script:
     # Build the wheel
-    - task build-whl
+    - ./task build-whl
   artifacts:
     name: dist
     paths:
