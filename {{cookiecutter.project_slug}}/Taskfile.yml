@@ -1,0 +1,49 @@
+version: '3'
+
+vars:
+  PACKAGE_SRC_DIR: {{ cookiecutter.project_slug }}
+
+  # Docker specific variables
+  DOCKER_BUILDKIT: 1
+  IMAGE_REGISTRY: {{ cookiecutter.image_registry }}
+  IMAGE_REPOSITORY: {{ cookiecutter.repository }}
+  IMAGE_NAME: {% raw %}"{{.IMAGE_REGISTRY}}/{{.IMAGE_REPOSITORY}}"{% endraw %}
+  IMAGE_TAG: local
+  DOCKER_BUILD_ARGS: ""
+  FLOWDAPT_VERSION: 0.1.2
+
+tasks:
+  lint:
+    cmds:
+      - {% raw %}flake8 {{.PACKAGE_SRC_DIR}}{% endraw %}
+
+  unit-tests:
+    cmds:
+      - coverage run -m pytest --junitxml=report.xml
+      - coverage report
+      - coverage xml
+      - coverage html -d coverage-report
+
+  build:
+    cmds:
+      - {% raw %}docker build --secret id=CI_DEP_TOKEN {{.DOCKER_BUILD_ARGS}} --build-arg FLOWDAPT_VERSION={{.FLOWDAPT_VERSION}} -t {{.IMAGE_NAME}}:{{.IMAGE_TAG}} .{% endraw %}
+
+  build-docs:
+    cmds:
+      - mkdocs build
+
+  build-whl:
+    cmds:
+      - poetry build --format wheel
+
+  run:
+    cmds:
+      - docker compose up -d
+
+  run-docs:
+    cmds:
+      - mkdocs serve
+
+  stop:
+    cmds:
+      - docker compose down

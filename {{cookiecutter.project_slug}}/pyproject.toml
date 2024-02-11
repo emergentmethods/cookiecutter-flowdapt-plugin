@@ -1,0 +1,71 @@
+[tool.poetry]
+name = "{{ cookiecutter.project_slug }}"
+version = "0.0.0"
+description = "{{ cookiecutter.project_description }}"
+authors = ["{{ cookiecutter.project_author }} <{{ cookiecutter.project_author_email }}>"]
+readme = "README.md"
+packages = [
+    { include = "{{ cookiecutter.project_slug }}" },
+]
+license = "MIT"
+repository = "{{ cookiecutter.project_url }}"
+
+[tool.poetry.scripts]
+{{ cookiecutter.project_slug }} = "{{ cookiecutter.project_slug }}.cli:cli"
+
+[tool.poetry.plugins."flowdapt.plugins"]
+{{ cookiecutter.project_slug }} = "{{ cookiecutter.project_slug }}"
+
+[tool.poetry.dependencies]
+python = "^{{ cookiecutter.python_version }}"
+flowdapt = "^0.1.2"
+# flowml = "^0.1.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.2.0"
+flake8 = "^6.0.0"
+pytest = "^7.3.1"
+pytest-asyncio = "^0.21.0"
+mkdocs = "^1.4.3"
+mkdocs-material = "^9.1.15"
+coverage = "^7.2.7"
+pre-commit = "^3.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "gitlab"
+url = "https://git.freqai.cloud/api/v4/groups/70/-/packages/pypi/simple"
+priority = "explicit"
+
+[tool.mypy]
+plugins = "pydantic.mypy"
+ignore_missing_imports = "True"
+
+[tool.pytest.ini_options]
+addopts = "-s -p no:warnings"
+testpaths = [
+    "tests",
+]
+asyncio_mode = "auto"
+log_cli = "True"
+log_auto_indent = "False"
+
+[tool.coverage.run]
+source = ["{{ cookiecutter.project_slug }}"]
+
+[tool.coverage.report]
+ignore_errors = "true"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "semver"
+version_provider = "poetry"
+update_changelog_on_bump = true
+bump_message = "chore(release): Release $new_version"

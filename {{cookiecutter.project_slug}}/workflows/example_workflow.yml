@@ -1,0 +1,11 @@
+kind: workflow
+metadata:
+  name: my_first_workflow
+spec:
+  stages:
+    - target: {{ cookiecutter.project_slug }}.stages.first_stage
+      name: first_stage
+    - target: {{ cookiecutter.project_slug }}.stages.second_stage
+      name: second_stage
+      depends_on:
+      - first_stage
